@@ -1,5 +1,6 @@
 import { Supadata } from "@supadata/js";
 import { GoogleGenAI } from "@google/genai";
+import PDFDocument from "pdfkit";
 import * as fs from "fs";
 import express from "express";
 import dotenv from "dotenv";
@@ -76,6 +77,82 @@ app.post("/getTranscription", async (req, res) => {
       status: "error",
       message: `${error}`,
     });
+  }
+});
+
+app.post("/aitranscript", async (req, res) => {
+  try {
+    let text = req.body.text;
+    const response = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: `${text}.Correct only the grammar part keeping the structure of the sentence same.Dont change the tone or dont reduce the length of sentences.Dont add anything new.Dont change the number of sentences or dont reduce the length of the content.Remove any unnecessary words like 'hmm',[sound] etc.Must give the output in one go and not in parts. Ensure the full output is returned at once. Dont return the text in parts.Dont use any \n \\ etc`,
+      config: {
+        thinkingConfig: {
+          thinkingBudget: 0, // Disables thinking
+        },
+      },
+    });
+    console.log(response.text);
+    res.status(200).json({
+      status: "completed",
+      transcript: `${response.text}`,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json({
+      status: "error",
+      message: `${err}`,
+    });
+  }
+});
+
+app.post("/getpdf", async (req, res) => {
+  try {
+    let text = req.body.text;
+
+    // Step 1: Clean text
+    let cleanText = text.replace(/\\n/g, " ").replace(/\\/g, " ");
+
+    // Step 2: Split into words
+    const words = cleanText.split(/\s+/);
+
+    // Step 3: Insert line breaks after every 500 words
+    let lines = [];
+    for (let i = 0; i < words.length; i += 500) {
+      lines.push(words.slice(i, i + 500).join(" "));
+    }
+
+    // Step 4: Prepare PDF
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      `attachment; filename="${new Date()
+        .toLocaleDateString("en-GB")
+        .slice(0, 8)}.pdf"`
+    );
+
+    const doc = new PDFDocument({ autoFirstPage: false });
+    doc.pipe(res);
+
+    const linesPerPage = 100;
+    let pageNumber = 1;
+
+    // Step 5: Add pages and lines
+    for (let i = 0; i < lines.length; i += linesPerPage) {
+      doc.addPage();
+      const pageLines = lines.slice(i, i + linesPerPage);
+
+      doc.text(pageLines.join("\n"), 50, 50, { width: 500 });
+
+      // page number at bottom
+      doc.text(`Page ${pageNumber}`, 0, 750, { align: "center" });
+      pageNumber++;
+    }
+
+    doc.end();
+  } catch (err) {
+    console.error(err);
+    res.status(400).json({ status: "Error", message: `${err}` });
   }
 });
 
