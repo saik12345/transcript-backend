@@ -54,7 +54,7 @@ app.post("/getTranscription", async (req, res) => {
       if (jobResult.status === "failed") {
         res.status(404).json({
           status: "failed",
-          transcript: null,
+          message: "The transcript couldnt be generated",
         });
       }
       console.log(jobResult.status);
