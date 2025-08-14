@@ -1,6 +1,7 @@
 import { Supadata } from "@supadata/js";
 import { GoogleGenAI } from "@google/genai";
 import PDFDocument from "pdfkit";
+import cors from "cors";
 import * as fs from "fs";
 import express from "express";
 import dotenv from "dotenv";
@@ -8,6 +9,7 @@ import dotenv from "dotenv";
 dotenv.config({});
 
 const app = express();
+app.use(cors());
 app.use(express.json());
 
 const supadata = new Supadata({ apiKey: process.env.supadata_key });
