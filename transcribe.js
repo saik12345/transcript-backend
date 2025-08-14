@@ -108,6 +108,42 @@ app.post("/aitranscript", async (req, res) => {
   }
 });
 
+app.post("/streamaitranscript", async (req, res) => {
+  try {
+    const text = req.body.text;
+    console.log(text.slice(0, 10));
+    // Set the headers for a stream response
+    res.setHeader("Content-Type", "text/plain");
+    res.setHeader("Transfer-Encoding", "chunked");
+    res.setHeader("Cache-Control", "no-cache");
+
+    const stream = await ai.models.generateContentStream({
+      model: "gemini-2.5-flash",
+      contents: `${text}. Correct only the grammar part keeping the structure of the sentence same. Don't change the tone or reduce the length of sentences. Don't add anything new. Don't change the number of sentences or reduce the length of the content. Remove any unnecessary words like 'hmm',[sound] etc. Must give the output in one go and not in parts. Ensure the full output is returned at once. Don't return the text in parts. Don't use any \n \\ etc.`,
+      config: {
+        generationConfig: {
+          temperature: 0.7,
+        },
+      },
+    });
+
+    for await (const chunk of stream) {
+      if (chunk?.text) {
+        // console.log(chunk.text);
+        res.write(chunk.text);
+      }
+    }
+
+    res.end(); // Signal that streaming is complete
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
+      status: "error",
+      message: `${err}`,
+    });
+  }
+});
+
 app.post("/getpdf", async (req, res) => {
   try {
     let text = req.body.text;
