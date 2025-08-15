@@ -119,7 +119,7 @@ app.post("/streamaitranscript", async (req, res) => {
 
     const stream = await ai.models.generateContentStream({
       model: "gemini-2.5-flash",
-      contents: `${text}. Correct only the grammar part keeping the structure of the sentence same. Don't change the tone or reduce the length of sentences. Don't add anything new. Don't change the number of sentences or reduce the length of the content. Remove any unnecessary words like 'hmm',[sound] etc. Must give the output in one go and not in parts. Ensure the full output is returned at once. Don't return the text in parts. Don't use any \n \\ etc.`,
+      contents: `${text}. Correct only the grammar part keeping the structure of the sentence same. Don't change the tone or reduce the length of sentences. Don't add anything new. Don't change the number of sentences or reduce the length of the content. Remove any unnecessary words like 'hmm',[sound] etc. Must give the output in one go and not in parts.Stream the output but make sure you complete and not stop abruptly. Don't return the text in parts. Don't use any \n \\ etc.`,
       config: {
         generationConfig: {
           temperature: 0.7,
