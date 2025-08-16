@@ -49,12 +49,12 @@ app.post("/getTranscription", async (req, res) => {
       let jobResult = await supadata.transcript.getJobStatus(job.jobId);
 
       while (jobResult.status === "queued" || jobResult.status === "active") {
-        await new Promise((r) => setTimeout(r, 3000));
+        await new Promise((r) => setTimeout(r, 5000));
         jobResult = await supadata.transcript.getJobStatus(job.jobId);
         console.log(jobResult.status);
       }
       if (jobResult.status === "failed") {
-        res.status(404).json({
+        return res.status(404).json({
           status: "failed",
           message: "The transcript couldnt be generated",
         });
