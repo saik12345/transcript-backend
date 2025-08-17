@@ -61,6 +61,7 @@ app.post("/getTranscription", async (req, res) => {
         });
       }
       console.log(jobResult.status);
+      console.log(jobResult);
       return res.status(200).json({
         status: "completed",
         transcript: jobResult.content,
