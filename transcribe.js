@@ -43,6 +43,7 @@ app.post("/getTranscription", async (req, res) => {
       text: true,
       mode: "auto",
     });
+    console.log("Job", job);
 
     //BAsed on jobId
     if ("jobId" in job) {
@@ -52,6 +53,7 @@ app.post("/getTranscription", async (req, res) => {
       while (jobResult.status === "queued" || jobResult.status === "active") {
         await new Promise((r) => setTimeout(r, 5000));
         jobResult = await supadata.transcript.getJobStatus(job.jobId);
+        console.log("Job Result", jobResult);
         console.log(jobResult.status);
       }
       if (jobResult.status === "failed") {
