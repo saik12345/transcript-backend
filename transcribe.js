@@ -5,6 +5,7 @@ import cors from "cors";
 import * as fs from "fs";
 import express from "express";
 import dotenv from "dotenv";
+import { createClient } from "@supabase/supabase-js";
 
 dotenv.config({});
 
@@ -12,7 +13,24 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: "50mb" }));
 
-const supadata = new Supadata({ apiKey: process.env.supadata_key });
+//-----------------------------------------
+
+const SUPABASE_URL = process.env.SUPABASE_URL;
+const SUPABASE_KEY = process.env.SUPABASE_KEY;
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+let val = 1;
+async function getProperKey() {
+  let { data: apicounter, error } = await supabase
+    .from("apicounter")
+    .select("keyno")
+    .eq("id", 1);
+  console.log(data);
+  val = data[0].keyno;
+}
+
+// getProperKey();
+
+const supadata = new Supadata({ apiKey: `process.env.supadata_key_${val}` });
 const ai = new GoogleGenAI({ apiKey: process.env.gemini_key });
 console.log(process.env.supadata_key);
 console.log(process.env.gemini_key);
@@ -62,7 +80,7 @@ app.post("/getTranscription", async (req, res) => {
           message: "The transcript couldnt be generated",
         });
       }
-      console.log(jobResult.status);
+      console.log("Job Result status : ", jobResult.status);
       console.log(jobResult);
       return res.status(200).json({
         status: "completed",
@@ -75,14 +93,16 @@ app.post("/getTranscription", async (req, res) => {
       transcript: job.content,
     });
   } catch (error) {
-    console.log(error);
-    console.log(typeof error);
+    console.log("Try-catch error block", error);
+    // console.log(typeof error);
     // const err = JSON.stringify(error);
-    console.dir(error);
-    res.status(400).send({
-      status: "error",
-      message: `${error}`,
-    });
+    // console.dir(error);
+
+    if (error)
+      res.status(400).send({
+        status: "error",
+        message: `${error}`,
+      });
   }
 });
 
