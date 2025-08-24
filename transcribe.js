@@ -20,7 +20,7 @@ const SUPABASE_KEY = process.env.SUPABASE_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 let val = 1;
 async function getProperKey() {
-  let { data: apicounter, error } = await supabase
+  let { data, error } = await supabase
     .from("apicounter")
     .select("keyno")
     .eq("id", 1);
