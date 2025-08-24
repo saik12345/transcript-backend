@@ -26,7 +26,8 @@ async function getProperKey() {
     .eq("id", 1);
   console.log(apicounter);
   val = apicounter[0].keyno;
-  console.log(val);
+  console.log("val", val);
+  console.log("env", process.env[`supadata_key_${val}`]);
 }
 
 getProperKey();
