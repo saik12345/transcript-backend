@@ -19,6 +19,7 @@ const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 let val = 2;
+let supadataenv = process.env.supadata_key_1;
 async function getProperKey() {
   let { data: apicounter, error } = await supabase
     .from("apicounter")
@@ -27,12 +28,13 @@ async function getProperKey() {
   console.log(apicounter);
   val = apicounter[0].keyno;
   console.log("val", val);
+  supadataenv = process.env[`supadata_key_${val}`];
   console.log("env", process.env[`supadata_key_${val}`]);
 }
 
 getProperKey();
 
-const supadata = new Supadata({ apiKey: process.env[`supadata_key_${val}`] });
+const supadata = new Supadata({ apiKey: supadataenv });
 const ai = new GoogleGenAI({ apiKey: process.env.gemini_key });
 console.log(process.env.supadata_key);
 console.log(process.env.gemini_key);
