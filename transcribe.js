@@ -18,7 +18,7 @@ app.use(express.json({ limit: "50mb" }));
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-let val = 1;
+let val = 2;
 async function getProperKey() {
   let { data: apicounter, error } = await supabase
     .from("apicounter")
