@@ -26,6 +26,7 @@ async function getProperKey() {
     .eq("id", 1);
   console.log(apicounter);
   val = apicounter[0].keyno;
+  console.log(val);
 }
 
 getProperKey();
