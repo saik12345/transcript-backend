@@ -31,7 +31,7 @@ async function getProperKey() {
 
 getProperKey();
 
-const supadata = new Supadata({ apiKey: `process.env.supadata_key_${val}` });
+const supadata = new Supadata({ apiKey: process.env.supadata_key_${val}] });
 const ai = new GoogleGenAI({ apiKey: process.env.gemini_key });
 console.log(process.env.supadata_key);
 console.log(process.env.gemini_key);
