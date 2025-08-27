@@ -124,12 +124,13 @@ app.post("/getTranscription", async (req, res) => {
         status: "error",
         message: `${error}`,
       });
-    } else if (error)
+    } else if (error) {
       return res.status(400).json({
         code: error.error,
         status: "error",
         message: `${error}`,
       });
+    }
   }
 });
 
