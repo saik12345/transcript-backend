@@ -20,16 +20,28 @@ const SUPABASE_KEY = process.env.SUPABASE_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 let val = 2;
 let supadataenv = process.env.supadata_key_1;
-async function getProperKey() {
-  let { data: apicounter, error } = await supabase
-    .from("apicounter")
-    .select("keyno")
-    .eq("id", 1);
-  console.log(apicounter);
-  val = apicounter[0].keyno;
-  console.log("val", val);
-  supadataenv = process.env[`supadata_key_${val}`];
-  console.log("env", process.env[`supadata_key_${val}`]);
+async function getProperKey({ errorCode = null }) {
+  if (errorCode) {
+    const { data, error } = await supabase
+      .from("apicounter")
+      .update({ keyno: val + 1 })
+      .eq("id", 1)
+      .select("keyno");
+    val = data[0].keyno;
+    console.log("after error val ", val);
+    supadataenv = process.env[`supadata_key_${val}`];
+    console.log("env", process.env[`supadata_key_${val}`]);
+  } else {
+    let { data: apicounter, error } = await supabase
+      .from("apicounter")
+      .select("keyno")
+      .eq("id", 1);
+    console.log(apicounter);
+    val = apicounter[0].keyno;
+    console.log("val", val);
+    supadataenv = process.env[`supadata_key_${val}`];
+    console.log("env", process.env[`supadata_key_${val}`]);
+  }
 }
 
 getProperKey();
@@ -80,6 +92,7 @@ app.post("/getTranscription", async (req, res) => {
       }
       if (jobResult.status === "failed") {
         return res.status(404).json({
+          code: res.statusCode,
           status: "failed",
           message: "The transcript couldnt be generated",
         });
@@ -87,12 +100,14 @@ app.post("/getTranscription", async (req, res) => {
       console.log("Job Result status : ", jobResult.status);
       console.log(jobResult);
       return res.status(200).json({
+        code: res.statusCode,
         status: "completed",
         transcript: jobResult.content,
       });
     }
     // console.log(job.content);
     res.status(200).json({
+      code: res.statusCode,
       status: "completed",
       transcript: job.content,
     });
@@ -100,10 +115,17 @@ app.post("/getTranscription", async (req, res) => {
     console.log("Try-catch error block", error);
     // console.log(typeof error);
     // const err = JSON.stringify(error);
-    // console.dir(error);
-
-    if (error)
-      res.status(400).send({
+    console.log("error", error);
+    if (error.error === 429) {
+      await getProperKey({ errorCode: 429 });
+      return res.status(400).json({
+        code: error.error,
+        status: "error",
+        message: `${error}`,
+      });
+    } else if (error)
+      return res.status(400).json({
+        code: error.error,
         status: "error",
         message: `${error}`,
       });
