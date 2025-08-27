@@ -20,7 +20,7 @@ const SUPABASE_KEY = process.env.SUPABASE_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 let val = 2;
 let supadataenv = process.env.supadata_key_1;
-async function getProperKey({ errorCode = null }) {
+async function getProperKey({ errorCode = null } = {}) {
   if (errorCode) {
     const { data, error } = await supabase
       .from("apicounter")
