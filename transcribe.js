@@ -18,7 +18,7 @@ app.use(express.json({ limit: "50mb" }));
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-let val = 2;
+let val = 1;
 let supadataenv = process.env.supadata_key_1;
 async function getProperKey({ errorCode = null } = {}) {
   if (errorCode) {
@@ -29,8 +29,8 @@ async function getProperKey({ errorCode = null } = {}) {
       .select("keyno");
     val = data[0].keyno;
     console.log("after error val ", val);
-    supadataenv = process.env[`supadata_key_${val}`];
-    console.log("env", process.env[`supadata_key_${val}`]);
+    // supadataenv = process.env[`supadata_key_${val}`];
+    // console.log("env", process.env[`supadata_key_${val}`]);
   } else {
     let { data: apicounter, error } = await supabase
       .from("apicounter")
