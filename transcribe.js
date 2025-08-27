@@ -115,8 +115,9 @@ app.post("/getTranscription", async (req, res) => {
     console.log("Try-catch error block", error);
     // console.log(typeof error);
     // const err = JSON.stringify(error);
-    console.log("error", error);
+    // console.log("error", error);
     if (error.error.included("limit-exceeded")) {
+      console.log("inside limit exceded scope");
       await getProperKey({ errorCode: 429 });
       return res.status(400).json({
         code: error.error,
