@@ -32,6 +32,7 @@ async function getProperKey({ errorCode = null } = {}) {
     // supadataenv = process.env[`supadata_key_${val}`];
     // console.log("env", process.env[`supadata_key_${val}`]);
   } else {
+    console.log("val", val);
     let { data: apicounter, error } = await supabase
       .from("apicounter")
       .select("keyno")
