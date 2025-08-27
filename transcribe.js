@@ -29,7 +29,7 @@ async function getProperKey({ errorCode = null } = {}) {
       .select("keyno");
     val = data[0].keyno;
     console.log("after error val ", val);
-    // supadataenv = process.env[`supadata_key_${val}`];
+    supadataenv = process.env[`supadata_key_${val}`];
     // console.log("env", process.env[`supadata_key_${val}`]);
   } else {
     console.log("val", val);
@@ -42,14 +42,18 @@ async function getProperKey({ errorCode = null } = {}) {
     console.log("val", val);
     supadataenv = process.env[`supadata_key_${val}`];
     console.log("env", process.env[`supadata_key_${val}`]);
-    return val;
+    // return val;
   }
 }
 
-getProperKey();
+await getProperKey();
 
-const supadata = new Supadata({ apiKey: getProperKey() });
+const supadata = new Supadata({
+  // apiKey: process.env[`supadata_key_${await getProperKey()}`],
+  apiKey: supadataenv,
+});
 const ai = new GoogleGenAI({ apiKey: process.env.gemini_key });
+
 console.log(process.env.supadata_key);
 console.log(process.env.gemini_key);
 
@@ -66,6 +70,7 @@ app.get("/", async (req, res) => {
   console.log("health check");
   res.status(200).json({
     data: "working",
+    val: val,
   });
 });
 
@@ -115,9 +120,7 @@ app.post("/getTranscription", async (req, res) => {
     });
   } catch (error) {
     console.log("Try-catch error block", error);
-    // console.log(typeof error);
-    // const err = JSON.stringify(error);
-    // console.log("error", error);
+
     if (error.error.includes("limit-exceeded")) {
       console.log("inside limit exceded scope");
       await getProperKey({ errorCode: 429 });
