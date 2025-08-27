@@ -42,12 +42,13 @@ async function getProperKey({ errorCode = null } = {}) {
     console.log("val", val);
     supadataenv = process.env[`supadata_key_${val}`];
     console.log("env", process.env[`supadata_key_${val}`]);
+    return val;
   }
 }
 
 getProperKey();
 
-const supadata = new Supadata({ apiKey: supadataenv });
+const supadata = new Supadata({ apiKey: getProperKey() });
 const ai = new GoogleGenAI({ apiKey: process.env.gemini_key });
 console.log(process.env.supadata_key);
 console.log(process.env.gemini_key);
