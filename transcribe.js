@@ -18,6 +18,7 @@ app.use(express.json({ limit: "50mb" }));
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+let supadata = "";
 let val = 1;
 let supadataenv = process.env.supadata_key_1;
 async function getProperKey({ errorCode = null } = {}) {
@@ -30,6 +31,9 @@ async function getProperKey({ errorCode = null } = {}) {
     val = data[0].keyno;
     console.log("after error val ", val);
     supadataenv = process.env[`supadata_key_${val}`];
+    supadata = new Supadata({
+      apiKey: supadataenv,
+    });
     // console.log("env", process.env[`supadata_key_${val}`]);
   } else {
     console.log("val", val);
@@ -41,6 +45,9 @@ async function getProperKey({ errorCode = null } = {}) {
     val = apicounter[0].keyno;
     console.log("val", val);
     supadataenv = process.env[`supadata_key_${val}`];
+    supadata = new Supadata({
+      apiKey: supadataenv,
+    });
     console.log("env", process.env[`supadata_key_${val}`]);
     // return val;
   }
@@ -48,10 +55,6 @@ async function getProperKey({ errorCode = null } = {}) {
 
 await getProperKey();
 
-const supadata = new Supadata({
-  // apiKey: process.env[`supadata_key_${await getProperKey()}`],
-  apiKey: supadataenv,
-});
 const ai = new GoogleGenAI({ apiKey: process.env.gemini_key });
 
 console.log(process.env.supadata_key);
@@ -75,6 +78,7 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/getTranscription", async (req, res) => {
+  await getProperKey();
   try {
     const reqUrl = req.body.reqUrl;
     const cleanUrl = toStandardYouTube(reqUrl);
