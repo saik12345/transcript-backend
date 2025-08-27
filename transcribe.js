@@ -119,13 +119,13 @@ app.post("/getTranscription", async (req, res) => {
     if (error.error === 429) {
       await getProperKey({ errorCode: 429 });
       return res.status(400).json({
-        code: error.error,
+        code: res.statusCode,
         status: "error",
         message: `${error}`,
       });
     } else if (error)
       return res.status(400).json({
-        code: error.error,
+        code: res.statusCode,
         status: "error",
         message: `${error}`,
       });
