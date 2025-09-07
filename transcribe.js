@@ -25,7 +25,7 @@ async function getProperKey({ errorCode = null } = {}) {
   if (errorCode) {
     const { data, error } = await supabase
       .from("apicounter")
-      .update({ keyno: val + 1 })
+      .update({ keyno: (val + 1) % 5 })
       .eq("id", 1)
       .select("keyno");
     val = data[0].keyno;
