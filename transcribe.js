@@ -57,7 +57,7 @@ await getProperKey();
 
 const ai = new GoogleGenAI({ apiKey: process.env.gemini_key });
 
-console.log(process.env.supadata_key);
+console.log(process.env[`supadata_key_${val}`]);
 console.log(process.env.gemini_key);
 
 //----------------------
