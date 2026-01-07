@@ -70,7 +70,7 @@ function toStandardYouTube(url) {
 //---------------------------------
 
 app.get("/", async (req, res) => {
-  console.log("health check");
+  console.log("====health check====");
   res.status(200).json({
     data: "working",
     val: val,
