@@ -78,7 +78,7 @@ app.get("/", async (req, res) => {
   });
 });
 
-app.get("/videoTitle",async(req,res)=>{
+app.post("/videoTitle",async(req,res)=>{
   console.log("fetching video title...");
   const url=req.body.url;
   const urlId=tostandardUrl(url).split('=')[1];
