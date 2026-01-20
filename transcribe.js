@@ -17,6 +17,7 @@ app.use(express.json({ limit: "50mb" }));
 
 const SUPABASE_URL = process.env.SUPABASE_URL;
 const SUPABASE_KEY = process.env.SUPABASE_KEY;
+const YT_KEY=process.env.YT_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 let supadata = "";
 let val = 1;
@@ -76,6 +77,17 @@ app.get("/", async (req, res) => {
     val: val,
   });
 });
+
+app.get("/videoTitle".async(req,res)=>{
+  console.log("fetching video title...");
+  const urlId=req.body.urlId;
+  const title=await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${urlId}&key=${process.env.YT_KEY}`);
+  const data=title.json();
+  return res.status(200).json({
+    data;
+  })
+
+})
 
 app.post("/getTranscription", async (req, res) => {
   await getProperKey();
