@@ -85,7 +85,7 @@ app.get("/videoTitle",async(req,res)=>{
   const title=await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${urlId}&key=${process.env.YT_KEY}`);
   const data=title.json();
   return res.status(200).json({
-    data;
+    data
   })
 
 })
