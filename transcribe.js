@@ -78,9 +78,10 @@ app.get("/", async (req, res) => {
   });
 });
 
-app.get("/videoTitle".async(req,res)=>{
+app.get("/videoTitle",async(req,res)=>{
   console.log("fetching video title...");
-  const urlId=req.body.urlId;
+  const url=req.body.url;
+  const urlId=tostandardUrl(url).split('=')[1];
   const title=await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${urlId}&key=${process.env.YT_KEY}`);
   const data=title.json();
   return res.status(200).json({
