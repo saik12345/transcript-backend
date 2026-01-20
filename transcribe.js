@@ -81,13 +81,12 @@ app.get("/", async (req, res) => {
 app.post("/videoTitle",async(req,res)=>{
   console.log("fetching video title...");
   const url=req.body.url;
-  const urlId=tostandardUrl(url).split('=')[1];
+  const urlId=tostandardYoutube(url).split('=')[1];
   const title=await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${urlId}&key=${process.env.YT_KEY}`);
   const data=title.json();
   return res.status(200).json({
     data
   })
-
 })
 
 app.post("/getTranscription", async (req, res) => {
