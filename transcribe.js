@@ -83,7 +83,7 @@ app.post("/videoTitle",async(req,res)=>{
   const url=req.body.url;
   const urlId=tostandardYoutube(url).split('=')[1];
   const title=await fetch(`https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${urlId}&key=${process.env.YT_KEY}`);
-  const data=title.json();
+  const data=await title.json();
   return res.status(200).json({
     data
   })
