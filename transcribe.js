@@ -103,7 +103,7 @@ app.post("/getTranscription", async (req, res) => {
       text: true,
       mode: "auto",
     });
-    console.log("Job", job);
+    //console.log("Job", job);
 
     //BAsed on jobId
     if ("jobId" in job) {
@@ -125,11 +125,15 @@ app.post("/getTranscription", async (req, res) => {
       }
       console.log("Job Result status : ", jobResult.status);
       console.log(jobResult);
-      return res.status(200).json({
-        code: res.statusCode,
-        status: "completed",
-        transcript: jobResult.content,
-      });
+      // return res.status(200).json({
+      //   code: res.statusCode,
+      //   status: "completed",
+      //   transcript: jobResult.content,
+      // });
+    }
+    else{
+      jobResult=job;
+      console.log("Job Result",jobResult);
     }
     // ========Finally getting the correct transcript here==========
     //=========We check if its and array or string==================
