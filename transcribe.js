@@ -143,7 +143,7 @@ app.post("/getTranscription", async (req, res) => {
     return res.status(200).json({
       code: res.statusCode,
       status: "completed",
-      transcript: (typeof content===)job.content,
+      transcript: transcriptText,
     });
   } catch (error) {
     console.log("Try-catch error block", error);
