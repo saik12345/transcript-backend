@@ -109,7 +109,7 @@ app.post("/getTranscription", async (req, res) => {
       let jobResult = await supadata.transcript.getJobStatus(job.jobId);
 
       while (jobResult.status === "queued" || jobResult.status === "active") {
-        await new Promise((r) => setTimeout(r, 5000));
+        await new Promise((r) => setTimeout(r, 15000));
         jobResult = await supadata.transcript.getJobStatus(job.jobId);
         console.log("Job Result", jobResult);
         console.log(jobResult.status);
@@ -130,7 +130,7 @@ app.post("/getTranscription", async (req, res) => {
       });
     }
     // console.log(job.content);
-    res.status(200).json({
+    return res.status(200).json({
       code: res.statusCode,
       status: "completed",
       transcript: job.content,
