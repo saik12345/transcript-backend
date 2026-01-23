@@ -92,6 +92,7 @@ app.post("/videoTitle",async(req,res)=>{
 
 app.post("/getTranscription", async (req, res) => {
   let transcriptText='';
+  let jobresult;
   await getProperKey();
   try {
     const reqUrl = req.body.reqUrl;
@@ -107,7 +108,7 @@ app.post("/getTranscription", async (req, res) => {
     //BAsed on jobId
     if ("jobId" in job) {
       console.log(job.jobId);
-      let jobResult = await supadata.transcript.getJobStatus(job.jobId);
+      jobResult = await supadata.transcript.getJobStatus(job.jobId);
 
       while (jobResult.status === "queued" || jobResult.status === "active") {
         await new Promise((r) => setTimeout(r, 15000));
