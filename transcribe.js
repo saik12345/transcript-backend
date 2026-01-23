@@ -91,6 +91,7 @@ app.post("/videoTitle",async(req,res)=>{
 })
 
 app.post("/getTranscription", async (req, res) => {
+  let transcriptText='';
   await getProperKey();
   try {
     const reqUrl = req.body.reqUrl;
@@ -129,11 +130,20 @@ app.post("/getTranscription", async (req, res) => {
         transcript: jobResult.content,
       });
     }
-    // console.log(job.content);
+    // ========Finally getting the correct transcript here==========
+    //=========We check if its and array or string==================
+
+    if(typeof jobResult.content==="string"){
+      transcriptText=jobResult.content;
+    }
+    if(Array.isArray(jobResult.content)){
+      transcriptText=jobResult.content.map(x=>x.text || "").join(" ");
+    }
+    
     return res.status(200).json({
       code: res.statusCode,
       status: "completed",
-      transcript: job.content,
+      transcript: (typeof content===)job.content,
     });
   } catch (error) {
     console.log("Try-catch error block", error);
