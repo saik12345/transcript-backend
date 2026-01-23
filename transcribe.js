@@ -92,7 +92,7 @@ app.post("/videoTitle",async(req,res)=>{
 
 app.post("/getTranscription", async (req, res) => {
   let transcriptText='';
-  let jobresult;
+  let jobResult;
   await getProperKey();
   try {
     const reqUrl = req.body.reqUrl;
