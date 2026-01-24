@@ -101,7 +101,7 @@ app.post("/getTranscription", async (req, res) => {
     const job = await supadata.transcript({
       url: cleanUrl,
       text: true,
-      mode: "native",
+      mode: "auto",
     });
     //console.log("Job", job);
 
