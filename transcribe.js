@@ -98,6 +98,31 @@ app.post("/getTranscription", async (req, res) => {
     const reqUrl = req.body.reqUrl;
     const cleanUrl = toStandardYouTube(reqUrl);
     console.log(cleanUrl);
+
+//1st try with youtube to transcript api service
+
+    
+const yttResponse=await fetch(`https://transcriptapi.com/api/v2/youtube/transcript?video_url=${cleanUrl}&format=json&include_timestamp=false`,{
+  method:'GET',
+  headers: {
+    "Authorization": `Bearer ${process.env.YTT_TOKEN}`,
+    "Content-Type": "application/json"
+  }
+})
+           
+if (yttResponse.status === 200) {
+  const yttData = await yttResponse.json();
+  console.log("yttResponse:", yttData);
+  const yttTranscript=(yttData?.transcript??[]).map(el=>el.text).join(' ');
+  return res.status(200).json({
+    code: res.statusCode,
+    status: "completed",
+    transcript: yttTranscript,
+  })
+} 
+
+
+ //2nd try the supadata service   
     const job = await supadata.transcript({
       url: cleanUrl,
       text: true,
