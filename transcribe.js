@@ -112,7 +112,8 @@ const yttResponse=await fetch(`https://transcriptapi.com/api/v2/youtube/transcri
            
 if (yttResponse.status === 200) {
   const yttData = await yttResponse.json();
-  console.log("yttResponse:", yttData);
+  // console.log("yttResponse:", yttData);
+   console.log("yttResponse:", completed);
   const yttTranscript=(yttData?.transcript??[]).map(el=>el.text).join(' ');
   return res.status(200).json({
     code: res.statusCode,
@@ -132,14 +133,15 @@ if (yttResponse.status === 200) {
 
     //BAsed on jobId
     if ("jobId" in job) {
-      console.log(job.jobId);
+      console.log("SUPADATA JOB_ID ",job.jobId);
       jobResult = await supadata.transcript.getJobStatus(job.jobId);
+      console.log(jobResult?.status);
 
       while (jobResult.status === "queued" || jobResult.status === "active") {
         await new Promise((r) => setTimeout(r, 15000));
         jobResult = await supadata.transcript.getJobStatus(job.jobId);
-        console.log("Job Result", jobResult);
-        console.log(jobResult.status);
+        // console.log("Job Result", jobResult);
+        // console.log(jobResult.status);
       }
       if (jobResult.status === "failed") {
         return res.status(404).json({
@@ -149,7 +151,7 @@ if (yttResponse.status === 200) {
         });
       }
       console.log("Job Result status : ", jobResult.status);
-      console.log(jobResult);
+      // console.log(jobResult);
       // return res.status(200).json({
       //   code: res.statusCode,
       //   status: "completed",
@@ -158,7 +160,7 @@ if (yttResponse.status === 200) {
     }
     else{
       jobResult=job;
-      console.log("Job Result",jobResult);
+      // console.log("Job Result",jobResult);
     }
     // ========Finally getting the correct transcript here==========
     //=========We check if its and array or string==================
@@ -208,7 +210,7 @@ app.post("/aitranscript", async (req, res) => {
         },
       },
     });
-    console.log(response.text);
+    // console.log(response.text);
     res.status(200).json({
       status: "completed",
       transcript: `${response.text}`,
