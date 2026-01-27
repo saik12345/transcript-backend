@@ -113,7 +113,7 @@ const yttResponse=await fetch(`https://transcriptapi.com/api/v2/youtube/transcri
 if (yttResponse.status === 200) {
   const yttData = await yttResponse.json();
   // console.log("yttResponse:", yttData);
-   console.log("yttResponse:", completed);
+   console.log("yttResponse: completed");
   const yttTranscript=(yttData?.transcript??[]).map(el=>el.text).join(' ');
   return res.status(200).json({
     code: res.statusCode,
