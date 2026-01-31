@@ -160,6 +160,13 @@ const yttResponse=await fetch(`https://transcriptapi.com/api/v2/youtube/transcri
 })
            
 if (yttResponse.status === 200) {
+
+const { data, error } = await supabase
+  .from('apicounter')
+  .update({ totalReq: totalReq + 1 })
+  .eq('id', 1)
+  .select('totalReq')
+  
   const yttData = await yttResponse.json();
   // console.log("yttResponse:", yttData);
    console.log("yttResponse: completed");
