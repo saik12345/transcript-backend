@@ -77,11 +77,13 @@ async function checkAvailableForTranscription() {
   console.log(storedDate+" "+totalReq)
   // Case 1: same day & under limit
   if (storedDate === today && totalReq < 5) {
+    console.log("Case 1: same day & under limit")
     return true;
   }
 
   // Case 2: same day & limit reached
   if (storedDate === today && totalReq >= 5) {
+     console.log("Case 2: same day & limit reached")
     return false;
   }
 
@@ -94,7 +96,7 @@ async function checkAvailableForTranscription() {
         totalReq: 0
       })
       .eq('id', 1);
-
+  console.log("Case 3: new day → reset counter & date")
     return true;
   }
 }
@@ -136,8 +138,9 @@ app.post("/videoTitle",async(req,res)=>{
 })
 
 app.post("/getTranscription", async (req, res) => {
+const isAllowed = await checkAvailableForTranscription();
 
-  if(checkAvailableForTranscription()===true)
+  if(isAllowed)
   {
     
   let transcriptText='';
