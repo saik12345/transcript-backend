@@ -221,6 +221,11 @@ const { data, error } = await supabase
     }
     else{
       jobResult=job;
+      const { data, error } = await supabase
+  .from('apicounter')
+  .update({ totalReq: totalReq+1 })
+  .eq('id', 1)
+  .select('totalReq')
       // console.log("Job Result",jobResult);
     }
     // ========Finally getting the correct transcript here==========
@@ -260,6 +265,7 @@ const { data, error } = await supabase
 }else{
     console.log("5 limits for day reached")
     return res.status(400).json({
+      code:"per-day-5-limit-error",
       status:"error",
       message:"You have used up 5 limits for the day"
     })
