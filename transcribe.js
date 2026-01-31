@@ -21,6 +21,7 @@ const YT_KEY=process.env.YT_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 let supadata = "";
 let val = 1;
+let totalReq=0;
 // let check=false;
 
 let supadataenv = process.env.supadata_key_1;
@@ -73,7 +74,7 @@ async function checkAvailableForTranscription() {
   const today = new Date().toISOString().split('T')[0];
 
   const storedDate = data.Date;       // "YYYY-MM-DD"
-  const totalReq = data.totalReq;     // number
+  totalReq = data.totalReq;     // number
   console.log(storedDate+" "+totalReq)
   // Case 1: same day & under limit
   if (storedDate === today && totalReq < 5) {
@@ -96,6 +97,7 @@ async function checkAvailableForTranscription() {
         totalReq: 0
       })
       .eq('id', 1);
+    totalReq=0;
   console.log("Case 3: new day → reset counter & date")
     return true;
   }
@@ -166,7 +168,7 @@ if (yttResponse.status === 200) {
 
 const { data, error } = await supabase
   .from('apicounter')
-  .update({ totalReq: totalReq + 1 })
+  .update({ totalReq: totalReq+1 })
   .eq('id', 1)
   .select('totalReq')
   
