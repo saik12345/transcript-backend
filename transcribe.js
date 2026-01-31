@@ -74,7 +74,7 @@ async function checkAvailableForTranscription() {
 
   const storedDate = data.Date;       // "YYYY-MM-DD"
   const totalReq = data.totalReq;     // number
-
+  console.log(storedDate+" "+totalReq)
   // Case 1: same day & under limit
   if (storedDate === today && totalReq < 5) {
     return true;
