@@ -21,7 +21,10 @@ const YT_KEY=process.env.YT_KEY;
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 let supadata = "";
 let val = 1;
+// let check=false;
+
 let supadataenv = process.env.supadata_key_1;
+
 async function getProperKey({ errorCode = null } = {}) {
   if (errorCode) {
     const { data, error } = await supabase
@@ -51,6 +54,48 @@ async function getProperKey({ errorCode = null } = {}) {
     });
     console.log("env", process.env[`supadata_key_${val}`]);
     // return val;
+  }
+}
+
+
+async function checkAvailableForTranscription() {
+  const { data, error } = await supabase
+    .from('apicounter')
+    .select('Date, totalReq')
+    .eq('id', 1)
+    .single();
+
+  if (error) {
+    console.error(error);
+    return false;
+  }
+
+  const today = new Date().toISOString().split('T')[0];
+
+  const storedDate = data.Date;       // "YYYY-MM-DD"
+  const totalReq = data.totalReq;     // number
+
+  // Case 1: same day & under limit
+  if (storedDate === today && totalReq < 5) {
+    return true;
+  }
+
+  // Case 2: same day & limit reached
+  if (storedDate === today && totalReq >= 5) {
+    return false;
+  }
+
+  // Case 3: new day → reset counter & date
+  if (storedDate !== today) {
+    await supabase
+      .from('apicounter')
+      .update({
+        Date: today,
+        totalReq: 0
+      })
+      .eq('id', 1);
+
+    return true;
   }
 }
 
@@ -91,6 +136,10 @@ app.post("/videoTitle",async(req,res)=>{
 })
 
 app.post("/getTranscription", async (req, res) => {
+
+  if(checkAvailableForTranscription()===true)
+  {
+    
   let transcriptText='';
   let jobResult;
   await getProperKey();
@@ -196,6 +245,13 @@ if (yttResponse.status === 200) {
       });
     }
   }
+}else{
+    console.log("5 limits for day reached")
+    return res.status(400).json({
+      status:"error",
+      message:"You have used up 5 limits for the day"
+    })
+}
 });
 
 app.post("/aitranscript", async (req, res) => {
