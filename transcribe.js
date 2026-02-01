@@ -220,6 +220,7 @@ const { data, error } = await supabase
       // });
     }
     else{
+      console.log("Supadata response complete..........")
       jobResult=job;
       const { data, error } = await supabase
   .from('apicounter')
