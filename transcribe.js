@@ -257,6 +257,7 @@ const { data, error } = await supabase
         message: `${error}`,
       });
     } else if (error) {
+      console.log('url error bad url ')
       return res.status(400).json({
         code: error.error,
         status: "error",
