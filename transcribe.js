@@ -260,7 +260,7 @@ const { data, error } = await supabase
       return res.status(400).json({
         code: error.error,
         status: "error",
-        message: `${error}`,
+        message: `There might be a problem with the youtube link. Please refresh the page and enter the url again !!`,
       });
     }
   }
