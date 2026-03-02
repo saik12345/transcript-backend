@@ -129,6 +129,8 @@ app.get("/", async (req, res) => {
 });
 
 app.post("/videoTitle",async(req,res)=>{
+  try{
+    
   console.log("fetching video title...");
   const url=req.body.url;
   console.log(url);
@@ -138,6 +140,13 @@ app.post("/videoTitle",async(req,res)=>{
   return res.status(200).json({
     title:data.items[0].snippet.title
   })
+  }catch(error){
+    console.log('Try catch block: title could not be fetched')
+    return res.status(400).json({
+      status:"error",
+      title:"no-title"
+    })
+  }
 })
 
 app.post("/getTranscription", async (req, res) => {
