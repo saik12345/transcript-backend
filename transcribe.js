@@ -335,7 +335,7 @@ app.post("/streamaitranscript", async (req, res) => {
 
     for await (const chunk of stream) {
       if (chunk?.text) {
-        // console.log(chunk.text);
+        console.log(chunk.text);
         res.write(chunk.text);
       }
     }
