@@ -321,12 +321,13 @@ app.post("/streamaitranscript", async (req, res) => {
         res.setHeader("Content-Type", "text/plain; charset=utf-8");
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Connection", "keep-alive");
+    res.setHeader("X-Accel-Buffering", "no");
     res.flushHeaders?.();
 
     const stream = await ai.models.generateContentStream({
       // model: "gemini-2.5-flash",
       model: "gemini-2.5-flash-lite",
-      contents: `${text}.keep Streaming the output but strictly make sure you complete and not stop abruptly. Correct only the grammar part keeping the structure of the sentence same. Don't change the tone or reduce the length of sentences. Don't add anything new. Don't change the number of sentences or reduce the length of the content. Remove any unnecessary words like 'hmm',[sound] etc.keep Streaming the output but make sure you complete and not stop abruptly. Don't use any \n \\ etc.Mandatorily the output language should be in english and you should translate to english only given the original text provided to you be in some other language. English is mandatory`,
+      contents: `${text}.keep Streaming the output in small chunks of about 5 words but strictly make sure you complete and not stop abruptly. Correct only the grammar part keeping the structure of the sentence same. Don't change the tone or reduce the length of sentences. Don't add anything new. Don't change the number of sentences or reduce the length of the content. Remove any unnecessary words like 'hmm',[sound] etc.keep Streaming the output but make sure you complete and not stop abruptly. Don't use any \n \\ etc.Mandatorily the output language should be in english and you should translate to english only given the original text provided to you be in some other language. English is mandatory`,
       config: {
         thinkingConfig: {
           thinkingBudget: 0,
