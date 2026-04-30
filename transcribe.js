@@ -313,11 +313,15 @@ app.post("/aitranscript", async (req, res) => {
 app.post("/streamaitranscript", async (req, res) => {
   try {
     const text = req.body.text;
-    console.log(text.slice(0, 10));
+    // console.log(text.slice(0, 10));
     // Set the headers for a stream response
-    res.setHeader("Content-Type", "text/plain");
+    // res.setHeader("Content-Type", "text/plain");
     res.setHeader("Transfer-Encoding", "chunked");
+    // res.setHeader("Cache-Control", "no-cache");
+        res.setHeader("Content-Type", "text/plain; charset=utf-8");
     res.setHeader("Cache-Control", "no-cache");
+    res.setHeader("Connection", "keep-alive");
+    res.flushHeaders?.();
 
     const stream = await ai.models.generateContentStream({
       // model: "gemini-2.5-flash",
